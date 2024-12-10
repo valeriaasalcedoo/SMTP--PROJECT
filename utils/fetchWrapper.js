@@ -29,4 +29,4 @@ class FetchWrapper {
     }
 }
 
-export const solicitud = new FetchWrapper('http://localhost:3000');
+export const solicitud = new FetchWrapper('https://backendsmtp.onrender.com');

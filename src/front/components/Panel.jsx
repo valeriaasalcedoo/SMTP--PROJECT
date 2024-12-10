@@ -1,11 +1,32 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import "../css/Panel.css";
 import ComposeModal from "./ComposeModal"; // Importa el nuevo modal
+import { solicitud } from "../../../utils/fetchWrapper";
 
 const Panel = () => {
   const [selectedContent, setSelectedContent] = useState("Bandeja de Entrada");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    // Lógica para cerrar sesión
+    try {
+      const response = await solicitud.post({
+        endpoint: "logout",
+      })
+      const data = await response.json();
+      console.log(data);
+      if(response.ok){
+        alert("Sesión cerrada correctamente");
+        navigate("/");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+   ;
+  };
 
   return (
     <div className="panel-container">
@@ -28,6 +49,7 @@ const Panel = () => {
               Aquí se mostrará el contenido relacionado con la selección del
               Sidebar.
             </p>
+            <button onClick={handleLogout}>Cerrar Sesión</button>
           </div>
         </div>
       </div>

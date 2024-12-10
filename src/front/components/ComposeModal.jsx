@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { solicitud } from "../../../utils/fetchWrapper";
 import "../css/ComposeModal.css";
 
 const ComposeModal = ({ onClose }) => {
@@ -6,14 +7,30 @@ const ComposeModal = ({ onClose }) => {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
+  const [error, setError] = useState("");
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     console.log("Enviando mensaje:", { to, subject, message, file });
-    onClose();
+    try {
+      const response = await solicitud.post({
+        endpoint: "mail/sendMail",
+        body: { to, subject, message, file },
+      })
+      const data = await response.json();
+      console.log(data);
+      if(!response.ok){
+        setError(data.error);
+        return;
+      }
+      alert("Mensaje enviado correctamente");
+      onClose();
+    } catch (error) {
+      console.error(error); 
+    }
   };
 
   return (
@@ -60,7 +77,9 @@ const ComposeModal = ({ onClose }) => {
             Enviar
           </button>
         </div>
+        {error && <p className="error">{error}</p>}
       </div>
+
     </div>
   );
 };

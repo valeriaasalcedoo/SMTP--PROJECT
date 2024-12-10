@@ -145,3 +145,9 @@ textarea:focus {
     border: 1px solid #3a3a3a;
     border-radius: 8px;
 }
+
+.error{
+    color: #f05454;
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+}

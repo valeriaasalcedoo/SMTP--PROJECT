@@ -20,7 +20,8 @@ class FetchWrapper {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(body)
+                body: JSON.stringify(body),
+                credentials: 'include'
             });
             return response;
         } catch (error) {
@@ -29,4 +30,4 @@ class FetchWrapper {
     }
 }
 
-export const solicitud = new FetchWrapper('https://backendsmtp.onrender.com');
+export const solicitud = new FetchWrapper('http://localhost:3000');

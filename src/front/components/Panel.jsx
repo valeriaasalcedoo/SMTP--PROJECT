@@ -2,30 +2,60 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import "../css/Panel.css";
-import ComposeModal from "./ComposeModal"; // Importa el nuevo modal
+import ComposeModal from "./ComposeModal";
+import MailPreview from "./MailPreview";
 import { solicitud } from "../../../utils/fetchWrapper";
+
+const mockEmails = [
+  {
+    id: 1,
+    sender: "Kyle From Web Dev S.",
+    subject: "Is CSS Simplified Right For You?",
+    body: "Hi Idiar, Do any of these sound like you? You want to land a high-paying job as a web developer...",
+    timestamp: "2024-12-10 10:30:00",
+  },
+  {
+    id: 2,
+    sender: "GitGuardian",
+    subject: "[idiar/backendSMTP] MongoDB URI exposed on GitHub",
+    body: "GitGuardian has detected the following MongoDB URI in your repository...",
+    timestamp: "2024-12-09 15:45:00",
+  },
+];
+const mockSentEmails = [
+  {
+    id: 1,
+    sender: "Tú",
+    subject: "Reunión confirmada",
+    body: "Hola equipo, la reunión está confirmada para mañana a las 10 AM...",
+    timestamp: "2024-12-10 09:00:00",
+  },
+  {
+    id: 2,
+    sender: "Tú",
+    subject: "Entrega del proyecto",
+    body: "El proyecto estará listo para su entrega el próximo lunes...",
+    timestamp: "2024-12-09 14:30:00",
+  },
+];
 
 const Panel = () => {
   const [selectedContent, setSelectedContent] = useState("Bandeja de Entrada");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEmail, setSelectedEmail] = useState(null);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    // Lógica para cerrar sesión
     try {
-      const response = await solicitud.post({
-        endpoint: "logout",
-      })
+      const response = await solicitud.post({ endpoint: "logout" });
       const data = await response.json();
-      console.log(data);
-      if(response.ok){
+      if (response.ok) {
         alert("Sesión cerrada correctamente");
         navigate("/");
       }
     } catch (error) {
       console.error(error);
     }
-   ;
   };
 
   return (
@@ -43,16 +73,52 @@ const Panel = () => {
       <div className="panel-body">
         <Sidebar setSelectedContent={setSelectedContent} />
         <div className="main-container">
-          <div className="content">
-            <h2>{selectedContent}</h2>
-            <p>
-              Aquí se mostrará el contenido relacionado con la selección del
-              Sidebar.
-            </p>
-            <button onClick={handleLogout}>Cerrar Sesión</button>
-          </div>
+        <div className="content">
+  {selectedContent === "Bandeja de Entrada" ? (
+    <>
+      <h2 className="inbox-title">{selectedContent}</h2>
+      <ul className="email-list">
+        {mockEmails.map((email) => (
+          <li
+            key={email.id}
+            className="email-item"
+            onClick={() => setSelectedEmail(email)}
+          >
+            <div className="email-sender">{email.sender}</div>
+            <div className="email-subject">{email.subject}</div>
+            <div className="email-preview">{email.body.substring(0, 50)}...</div>
+          </li>
+        ))}
+      </ul>
+    </>
+  ) : selectedContent === "Bandeja de Salida" ? (
+    <>
+      <h2 className="inbox-title">{selectedContent}</h2>
+      <ul className="email-list">
+        {mockSentEmails.map((email) => (
+          <li
+            key={email.id}
+            className="email-item"
+            onClick={() => setSelectedEmail(email)}
+          >
+            <div className="email-sender">{email.sender}</div>
+            <div className="email-subject">{email.subject}</div>
+            <div className="email-preview">{email.body.substring(0, 50)}...</div>
+          </li>
+        ))}
+      </ul>
+    </>
+  ) : (
+    <p>Aquí se mostrará el contenido relacionado con la selección del Sidebar.</p>
+  )}
+  <button onClick={handleLogout}>Cerrar Sesión</button>
+</div>
+
         </div>
       </div>
+      {selectedEmail && (
+        <MailPreview email={selectedEmail} onClose={() => setSelectedEmail(null)} />
+      )}
       {isModalOpen && <ComposeModal onClose={() => setIsModalOpen(false)} />}
     </div>
   );

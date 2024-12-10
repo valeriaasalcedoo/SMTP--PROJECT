@@ -1,7 +1,7 @@
-import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Login from './front/components/Login';
 import Panel from './front/components/Panel';
+import Register from './front/components/Register';
 
 const App = () => {
   return (
@@ -13,6 +13,8 @@ const App = () => {
 
           {/* Ruta para el Panel Principal */}
           <Route path="/panel" element={<Panel />} />
+
+          <Route path="/register" element={<Register />} />
         </Routes>
       </div>
     </Router>

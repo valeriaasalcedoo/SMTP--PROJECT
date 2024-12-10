@@ -116,10 +116,10 @@ label {
 }
 
 .input:focus + label,
-.input:valid + label {
-    transform: translateY(-140%) scale(0.9);
-    transition: all 0.4s;
-    color:  rgb(249, 187, 81);
+.input:not(:placeholder-shown) + label {
+    top: -10px;
+    font-size: 0.9rem;
+    color: rgb(249, 187, 81);
 }
 
 button {
@@ -141,4 +141,10 @@ a {
 p {
     padding-left: 80px;
     color: #ffffff; /* Texto claro */
+}
+
+.error {
+    color: red;
+    font-size: 0.8em;
+    padding-left: 80px;
 }
